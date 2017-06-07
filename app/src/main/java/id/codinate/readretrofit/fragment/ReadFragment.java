@@ -8,17 +8,25 @@ package id.codinate.readretrofit.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +53,7 @@ public class ReadFragment extends Fragment {
     ProgressDialog mProgressDialog;
     private ListView listView;
     private ArrayList<HashMap<String, String>> data;
+
     public ReadFragment() {
         // Required empty public constructor
     }
@@ -62,15 +71,15 @@ public class ReadFragment extends Fragment {
         mApiService.readPohon().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     mProgressDialog.dismiss();
                     try {
                         JSONObject object = new JSONObject(response.body().string());
                         String result = object.getString("error");
-                        if (result.equalsIgnoreCase("false")){
+                        if (result.equalsIgnoreCase("false")) {
                             JSONArray jsonArray = object.getJSONArray("pohon");
-                            for(int i = 0; i <jsonArray.length(); i++){
-                                JSONObject jsonObject= jsonArray.getJSONObject(i);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 String id = jsonObject.getString("id");
                                 String uuid = jsonObject.getString("uuid");
                                 String jenis_pohon = jsonObject.getString("jenis_pohon");
@@ -95,7 +104,7 @@ public class ReadFragment extends Fragment {
                                 data.add(map);
                                 setListAdapter(data);
                             }
-                        }else {
+                        } else {
                             String error = object.getString("error_msg");
                             Toast.makeText(mContext, error, Toast.LENGTH_SHORT).show();
                         }
@@ -115,17 +124,60 @@ public class ReadFragment extends Fragment {
         });
         return v;
     }
+
     private CustomAdapter adapter;
-    private void setListAdapter(ArrayList<HashMap<String, String>> data) {
+
+    private void setListAdapter(final ArrayList<HashMap<String, String>> data) {
         adapter = new CustomAdapter(mContext, data);
 //        listView = (ListView) v.findViewById(R.id.listView); di onCreat
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Peringatan");
+                alertDialog.setMessage("Lakukan Aksi");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "EDIT", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "HAPUS", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "LIHAT DATA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                        final HashMap<String, String> hasil = data.get(position);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("hashmap", hasil);
+                        //set Fragmentclass Arguments
+                        FragmentManager manager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction transaction = manager.beginTransaction();
+                        LihatFragment fragment = new LihatFragment();
+                        fragment.setArguments(bundle);
+
+                        transaction.replace(R.id.container, fragment);
+                        transaction.addToBackStack(null).commit();
+                    }
+                });
+                alertDialog.show();
+            }
+        });
     }
 
     private class CustomAdapter extends BaseAdapter {
         Context context;
-        ArrayList<HashMap<String,String>> dataPohon;
-        public CustomAdapter(Context Context, ArrayList<HashMap<String, String>> data){
+        ArrayList<HashMap<String, String>> dataPohon;
+
+        public CustomAdapter(Context Context, ArrayList<HashMap<String, String>> data) {
             this.context = Context;
             this.dataPohon = data;
         }
@@ -147,19 +199,20 @@ public class ReadFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater= (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = inflater.inflate(R.layout.list_item, null);
-            TextView ID = (TextView) v.findViewById(R.id.txtID);
             TextView Jenis = (TextView) v.findViewById(R.id.txtJenis);
             TextView Kondisi = (TextView) v.findViewById(R.id.txtKondisi);
             TextView Usia = (TextView) v.findViewById(R.id.txtUsia);
+            ImageView gambar = (ImageView) v.findViewById(R.id.imgView);
 
             final HashMap<String, String> hasil;
             hasil = dataPohon.get(position);
-            ID.setText(hasil.get("id"));
             Jenis.setText(hasil.get("jenis_pohon"));
             Kondisi.setText(hasil.get("kondisi_pohon"));
-            Usia.setText(hasil.get("usia_pohon"));
+            Usia.setText(hasil.get("usia_pohon") + " th");
+            String url = "http://192.168.43.233/appandroid/gambar/" + hasil.get("foto_pohon");
+            Picasso.with(getActivity()).load(url).error(R.mipmap.ic_launcher).into(gambar);
             return v;
         }
     }

@@ -21,4 +21,13 @@ public class MainActivity extends AppCompatActivity {
                 fragment, fragment.getClass().getSimpleName())
                 .addToBackStack(null).commit();
     }
+
+    @Override
+    public void onBackPressed() {
+       if(getFragmentManager().getBackStackEntryCount() > 0 ){
+           getFragmentManager().popBackStack();
+       }else {
+           super.onBackPressed();
+       }
+    }
 }
