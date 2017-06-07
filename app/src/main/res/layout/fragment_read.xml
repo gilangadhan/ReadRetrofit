@@ -1,0 +1,18 @@
+<!--
+  ~ Copyright (c) 2017. Gilang Ramadhan (gilangramadhan96.gr@gmail.com)
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="id.codinate.readretrofit.fragment.ReadFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+   <ListView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/listView">
+   </ListView>
+
+</FrameLayout>

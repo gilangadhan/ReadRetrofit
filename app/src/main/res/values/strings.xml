@@ -1,0 +1,10 @@
+<!--
+  ~ Copyright (c) 2017. Gilang Ramadhan (gilangramadhan96.gr@gmail.com)
+  -->
+
+<resources>
+    <string name="app_name">Read Retrofit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
