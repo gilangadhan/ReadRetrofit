@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Fragment fragment = new ReadFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,
+        getSupportFragmentManager().beginTransaction().add(R.id.container,
                 fragment, fragment.getClass().getSimpleName())
-                .addToBackStack(null).commit();
+                .commit();
     }
 
     @Override

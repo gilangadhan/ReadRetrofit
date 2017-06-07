@@ -164,7 +164,7 @@ public class ReadFragment extends Fragment {
                         LihatFragment fragment = new LihatFragment();
                         fragment.setArguments(bundle);
 
-                        transaction.replace(R.id.container, fragment);
+                        transaction.add(R.id.container, fragment);
                         transaction.addToBackStack(null).commit();
                     }
                 });
