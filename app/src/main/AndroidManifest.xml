@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!--   ~ Copyright (c) 2017. Gilang Ramadhan (gilangramadhan96.gr@gmail.com) -->
+<?xml version="1.0" encoding="utf-8"?><!-- ~ Copyright (c) 2017. Gilang Ramadhan (gilangramadhan96.gr@gmail.com) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="id.codinate.readretrofit">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -39,7 +41,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".FormActivity"></activity>
     </application>
 
 </manifest>

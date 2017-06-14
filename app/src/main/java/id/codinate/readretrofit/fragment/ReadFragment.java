@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import id.codinate.readretrofit.FormActivity;
 import id.codinate.readretrofit.R;
 import id.codinate.readretrofit.apihelper.BaseApiService;
 import id.codinate.readretrofit.apihelper.UtilsApi;
@@ -63,6 +65,14 @@ public class ReadFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.fragment_read, container, false);
+        ImageView imageView = (ImageView) v.findViewById(R.id.imgTambahData);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FormActivity.class);
+                startActivity(intent);
+            }
+        });
         mContext = getActivity();
         mApiService = UtilsApi.getApiService();
         data = new ArrayList<>();
